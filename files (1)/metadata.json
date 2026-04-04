@@ -1,0 +1,7 @@
+{
+  "name": "DreamForgeAI",
+  "description": "An immersive AI-powered story studio that generates illustrated children's books with high-fidelity narration.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
