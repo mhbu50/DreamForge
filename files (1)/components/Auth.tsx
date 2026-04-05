@@ -38,6 +38,8 @@ export default function Auth() {
         customSettings: {},
         xp: 0,
         level: 1,
+        coinsBalance: isHeadAdmin ? -1 : 250,
+        coinsUsed: 0,
         createdAt: Date.now(),
       });
     }
