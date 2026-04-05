@@ -9,6 +9,8 @@ export interface UserProfile {
   customSettings: Record<string, any>;
   xp: number;
   level: number;
+  coinsBalance: number; // -1 = unlimited
+  coinsUsed: number;    // lifetime total
   createdAt: number;
 }
 
@@ -37,4 +39,33 @@ export interface Story {
   category: string;
   language: string;
   createdAt: number;
+}
+
+export interface TextBlock {
+  id: string;
+  text: string;
+  x: number;       // 0–100 percent from left
+  y: number;       // 0–100 percent from top
+  fontSize: number;
+  color: string;
+  bold: boolean;
+  italic: boolean;
+}
+
+export interface BookPage {
+  id: string;
+  order: number;
+  imageUrl?: string;
+  textBlocks: TextBlock[];
+}
+
+export interface DiscountCode {
+  id: string;
+  code: string;
+  discountType: 'percent' | 'fixed';
+  discountValue: number;
+  tier: 'standard' | 'premium' | 'ultimate' | 'any';
+  isActive: boolean;
+  createdAt: number;
+  createdBy?: string;
 }
