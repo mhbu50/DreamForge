@@ -40,12 +40,12 @@ export default function StoryLibrary({
       <header className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
         <div>
           <h2 className="text-7xl font-serif font-light mb-4 tracking-tight">Your <span className="italic text-gold">Library</span></h2>
-          <p className="text-black/40 small-caps tracking-[0.4em] text-xs">A collection of your crafted masterpieces</p>
+          <p className="text-black/50 small-caps tracking-[0.4em] text-xs">A collection of your crafted masterpieces</p>
         </div>
         
         <div className="flex flex-col md:flex-row items-center gap-6 p-2 bg-white rounded-3xl shadow-sm border border-black/5 px-6">
           <div className="flex items-center gap-3 flex-1 min-w-[300px]">
-            <Sparkles className="text-black/20" size={18} />
+            <Sparkles className="text-black/30" size={18} />
             <input 
               type="text" 
               placeholder="Search your library..." 
@@ -89,12 +89,24 @@ export default function StoryLibrary({
           ))}
         </div>
       ) : stories.length === 0 ? (
-        <div className="text-center py-32 bg-white rounded-[3rem] border border-dashed border-black/10">
-          <BookOpen className="mx-auto mb-8 text-black/5" size={80} />
-          <h3 className="text-3xl font-serif text-black/20 mb-8">Your archives are empty.</h3>
-          <button 
+        <div className="text-center py-32 bg-white rounded-[3rem] border border-dashed border-black/10 relative overflow-hidden">
+          {/* Subtle background glow */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full" style={{background: 'radial-gradient(circle, rgba(212,175,55,0.04) 0%, transparent 70%)'}} />
+          </div>
+          {/* Styled icon container */}
+          <div className="relative mb-10 inline-block">
+            <div className="w-32 h-32 rounded-[2.5rem] bg-gradient-to-br from-black/5 to-black/10 flex items-center justify-center mx-auto shadow-inner">
+              <BookOpen className="text-black/10" size={56} />
+            </div>
+            <div className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-gold/20 border border-gold/40" />
+            <div className="absolute -bottom-1 -left-1 w-3 h-3 rounded-full bg-gold/30" />
+          </div>
+          <h3 className="text-4xl font-serif font-light text-black/30 mb-3">Your archives are empty.</h3>
+          <p className="text-sm text-black/30 mb-12 max-w-xs mx-auto">Every great storyteller starts with a single tale. Yours begins now.</p>
+          <button
             onClick={onCreate}
-            className="px-12 py-5 bg-black text-white rounded-2xl font-bold hover:bg-gold hover:text-night transition-all flex flex-col items-center gap-1 group"
+            className="px-12 py-5 bg-black text-white rounded-2xl font-bold hover:bg-gold hover:text-night transition-all inline-flex flex-col items-center gap-1 group mx-auto"
           >
             <div className="flex items-center gap-2">
               <Sparkles size={18} className="group-hover:rotate-12 transition-transform" />
@@ -214,17 +226,25 @@ function StoryCard({ story, index, viewMode, onSelect, onPublish, onDelete, onAd
           </div>
         </div>
 
-        <img 
-          src={story.coverImage || story.pages[0].imageUrl} 
-          alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
-          style={{
-            filter: story.coverImageAdjustments ? 
-              `brightness(${story.coverImageAdjustments.brightness}%) contrast(${story.coverImageAdjustments.contrast}%) saturate(${story.coverImageAdjustments.saturation}%) sepia(${story.coverImageAdjustments.sepia}%) grayscale(${story.coverImageAdjustments.grayscale}%) blur(${story.coverImageAdjustments.blur}px) hue-rotate(${story.coverImageAdjustments.hueRotate}deg)` : 'none',
-            transform: story.coverImageAdjustments ? 
-              `rotate(${story.coverImageAdjustments.rotate}deg) scaleX(${story.coverImageAdjustments.flipX ? -1 : 1}) scaleY(${story.coverImageAdjustments.flipY ? -1 : 1})` : 'none'
-          }}
-          referrerPolicy="no-referrer"
-        />
+        {(story.coverImage || story.pages[0]?.imageUrl) ? (
+          <img
+            src={story.coverImage || story.pages[0].imageUrl}
+            alt=""
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
+            style={{
+              filter: story.coverImageAdjustments ?
+                `brightness(${story.coverImageAdjustments.brightness}%) contrast(${story.coverImageAdjustments.contrast}%) saturate(${story.coverImageAdjustments.saturation}%) sepia(${story.coverImageAdjustments.sepia}%) grayscale(${story.coverImageAdjustments.grayscale}%) blur(${story.coverImageAdjustments.blur}px) hue-rotate(${story.coverImageAdjustments.hueRotate}deg)` : 'none',
+              transform: story.coverImageAdjustments ?
+                `rotate(${story.coverImageAdjustments.rotate}deg) scaleX(${story.coverImageAdjustments.flipX ? -1 : 1}) scaleY(${story.coverImageAdjustments.flipY ? -1 : 1})` : 'none'
+            }}
+            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+            referrerPolicy="no-referrer"
+          />
+        ) : (
+          <div className="w-full h-full bg-gradient-to-br from-black/10 to-black/20 flex items-center justify-center">
+            <BookOpen className="text-white/20" size={48} />
+          </div>
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
         
         {/* Read Now Slide-in */}

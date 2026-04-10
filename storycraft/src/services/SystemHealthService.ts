@@ -116,13 +116,13 @@ export class SystemHealthService {
 
       // 6. Check for Head Admins
       try {
-        const adminsSnap = await getDocs(query(collection(db, 'users'), where('role', '==', 'head-admin'), limit(1)));
+        const adminsSnap = await getDocs(query(collection(db, 'users'), where('role', '==', 'headadmin'), limit(1)));
         if (adminsSnap.empty) {
           issues.push({
             id: `no-head-admin-${Date.now()}`,
             type: 'warning',
             component: 'Security',
-            message: 'No users found with the "head-admin" role.',
+            message: 'No users found with the "headadmin" role.',
             timestamp: Date.now(),
             status: 'pending'
           });
@@ -143,7 +143,7 @@ export class SystemHealthService {
   private async notifyHeadAdmin(criticalIssues: HealthIssue[]) {
     try {
       // Find head admins
-      const adminsSnap = await getDocs(query(collection(db, 'users'), where('role', '==', 'head-admin')));
+      const adminsSnap = await getDocs(query(collection(db, 'users'), where('role', '==', 'headadmin')));
       
       for (const adminDoc of adminsSnap.docs) {
         const adminData = adminDoc.data();

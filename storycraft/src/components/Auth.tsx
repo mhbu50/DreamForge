@@ -163,7 +163,7 @@ export default function Auth() {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-md space-y-8 glass-surface p-10 rounded-[2rem] border-white/5"
+          className="w-full max-w-md space-y-8 glass-surface p-10 rounded-[2rem] border border-white/5 border-t-gold/20"
         >
           <div className="text-center">
             <h2 className="text-4xl font-serif mb-2">{isLogin ? 'Welcome Back' : 'Join the Studio'}</h2>
@@ -172,22 +172,22 @@ export default function Auth() {
 
           <form onSubmit={handleEmailAuth} className="space-y-6">
             <div className="space-y-2">
-              <label className="small-caps text-[10px]">Email Address</label>
+              <label className="small-caps text-[10px] text-white/60">Email Address</label>
               <input 
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-gold/50 transition-all input-focus-grow"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-gold/50 transition-all input-focus-underline"
                 placeholder="you@example.com"
               />
             </div>
             <div className="space-y-2">
-              <label className="small-caps text-[10px]">Password</label>
+              <label className="small-caps text-[10px] text-white/60">Password</label>
               <input 
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-gold/50 transition-all input-focus-grow"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-gold/50 transition-all input-focus-underline"
                 placeholder="••••••••"
               />
             </div>
@@ -195,7 +195,7 @@ export default function Auth() {
             <button 
               type="submit"
               disabled={loading}
-              className="w-full bg-gold text-night font-bold py-4 rounded-xl hover:bg-gold/90 transition-all flex items-center justify-center gap-2 disabled:opacity-50 btn-ripple"
+              className="w-full bg-gold text-night font-bold py-4 rounded-xl hover:bg-gold/90 transition-all flex items-center justify-center gap-2 disabled:opacity-50 btn-ripple shadow-lg shadow-gold/20 hover:shadow-gold/40"
             >
               {loading ? <Loader2 className="animate-spin" /> : isLogin ? <LogIn size={20} /> : <UserPlus size={20} />}
               <span>{isLogin ? 'Sign In' : 'Create Account'}</span>

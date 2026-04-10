@@ -702,66 +702,33 @@ export default function Dashboard({ userProfile }: DashboardProps) {
         </div>
 
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto custom-scrollbar">
-          <button 
-            onClick={() => { setCurrentStory(null); setIsCreating(false); setShowAdmin(false); setActiveView('library'); }}
-            className={cn(
-              "w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all group",
-              activeView === 'library' ? "bg-black text-white shadow-xl" : "text-black/40 hover:bg-black/5 hover:text-black"
-            )}
-          >
-            <Layout size={20} />
-            <span className="text-sm font-bold uppercase tracking-widest">Library</span>
-          </button>
-          <button 
-            onClick={() => { setCurrentStory(null); setIsCreating(false); setShowAdmin(false); setActiveView('workspace'); }}
-            className={cn(
-              "w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all group",
-              activeView === 'workspace' ? "bg-black text-white shadow-xl" : "text-black/40 hover:bg-black/5 hover:text-black"
-            )}
-          >
-            <Edit3 size={20} />
-            <span className="text-sm font-bold uppercase tracking-widest">Workspace</span>
-          </button>
-          <button 
-            onClick={() => { setCurrentStory(null); setIsCreating(false); setShowAdmin(false); setActiveView('themes'); }}
-            className={cn(
-              "w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all group",
-              activeView === 'themes' ? "bg-black text-white shadow-xl" : "text-black/40 hover:bg-black/5 hover:text-black"
-            )}
-          >
-            <Palette size={20} />
-            <span className="text-sm font-bold uppercase tracking-widest">Themes</span>
-          </button>
-          <button 
-            onClick={() => { setCurrentStory(null); setIsCreating(false); setShowAdmin(false); setActiveView('forge-settings'); }}
-            className={cn(
-              "w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all group",
-              activeView === 'forge-settings' ? "bg-black text-white shadow-xl" : "text-black/40 hover:bg-black/5 hover:text-black"
-            )}
-          >
-            <SettingsIcon size={20} />
-            <span className="text-sm font-bold uppercase tracking-widest">Settings</span>
-          </button>
-          <button 
-            onClick={() => { setCurrentStory(null); setIsCreating(false); setShowAdmin(false); setActiveView('support'); }}
-            className={cn(
-              "w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all group",
-              activeView === 'support' ? "bg-black text-white shadow-xl" : "text-black/40 hover:bg-black/5 hover:text-black"
-            )}
-          >
-            <LifeBuoy size={20} />
-            <span className="text-sm font-bold uppercase tracking-widest">Support</span>
-          </button>
-          <button 
-            onClick={() => { setCurrentStory(null); setIsCreating(false); setShowAdmin(false); setActiveView('publish'); }}
-            className={cn(
-              "w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all group",
-              activeView === 'publish' ? "bg-black text-white shadow-xl" : "text-black/40 hover:bg-black/5 hover:text-black"
-            )}
-          >
-            <Share2 size={20} />
-            <span className="text-sm font-bold uppercase tracking-widest">Publish</span>
-          </button>
+          {([
+            { view: 'library', icon: <Layout size={20} />, label: 'Library' },
+            { view: 'workspace', icon: <Edit3 size={20} />, label: 'Workspace' },
+            { view: 'themes', icon: <Palette size={20} />, label: 'Themes' },
+            { view: 'forge-settings', icon: <SettingsIcon size={20} />, label: 'Settings' },
+            { view: 'support', icon: <LifeBuoy size={20} />, label: 'Support' },
+            { view: 'publish', icon: <Share2 size={20} />, label: 'Publish' },
+          ] as const).map(({ view, icon, label }) => (
+            <button
+              key={view}
+              onClick={() => { setCurrentStory(null); setIsCreating(false); setShowAdmin(false); setActiveView(view); }}
+              className={cn(
+                "w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all group relative overflow-hidden",
+                activeView === view
+                  ? "bg-black text-white shadow-xl"
+                  : "text-black/40 hover:bg-black/5 hover:text-black"
+              )}
+            >
+              {activeView === view && (
+                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-gold rounded-r-full" />
+              )}
+              <span className={cn("transition-colors", activeView === view ? "text-gold" : "")}>
+                {icon}
+              </span>
+              <span className="text-sm font-bold uppercase tracking-widest">{label}</span>
+            </button>
+          ))}
         </nav>
 
         <div className="p-8 border-t border-black/5">
@@ -805,19 +772,19 @@ export default function Dashboard({ userProfile }: DashboardProps) {
               <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center text-white">
                 <Sparkles size={16} />
               </div>
-              <span className="text-lg font-serif font-bold">Dreamforge</span>
+              <span className="text-lg font-serif font-bold">StoryCraft</span>
             </div>
           </div>
           
           <div className="flex items-center gap-4">
             <div className="group relative">
-              <div className="flex items-center gap-3 px-6 py-3 bg-amber-50 rounded-2xl border border-amber-100 shadow-sm hover:shadow-md transition-all cursor-help">
-                <div className="w-8 h-8 bg-amber-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-amber-500/20">
-                  <Zap size={18} className="fill-white" />
+              <div className="flex items-center gap-3 px-6 py-3 bg-gold/5 rounded-2xl border border-gold/10 shadow-sm hover:shadow-md transition-all cursor-help">
+                <div className="w-8 h-8 bg-gold rounded-xl flex items-center justify-center text-night shadow-lg shadow-gold/20">
+                  <Zap size={18} className="fill-night" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-lg font-bold text-amber-900 leading-none">{userProfile?.tokens || 0}</span>
-                  <span className="text-[9px] font-bold uppercase tracking-widest text-amber-600/60">Tokens Available</span>
+                  <span className="text-lg font-bold text-gold leading-none">{userProfile?.tokens || 0}</span>
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-gold/60">Tokens Available</span>
                 </div>
               </div>
               
@@ -1105,19 +1072,43 @@ export default function Dashboard({ userProfile }: DashboardProps) {
                 </div>
               </div>
 
-              {/* Quick Stats or something else could go here, but for now we simplify */}
+              {/* Quick Stats */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="p-8 bg-white rounded-[2rem] border border-black/5 shadow-sm">
-                  <div className="text-[10px] small-caps tracking-widest text-black/40 font-bold mb-4">Total Stories</div>
+                <div className="p-8 bg-white rounded-[2rem] border border-black/5 shadow-sm hover:shadow-md transition-all group">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="text-[10px] small-caps tracking-widest text-black/40 font-bold">Total Stories</div>
+                    <div className="w-8 h-8 rounded-xl bg-black/5 flex items-center justify-center text-black/30 group-hover:bg-gold/10 group-hover:text-gold transition-all">
+                      <BookOpen size={16} />
+                    </div>
+                  </div>
                   <div className="text-4xl font-serif font-bold">{stories.length}</div>
+                  <div className="mt-3 h-1 bg-black/5 rounded-full overflow-hidden">
+                    <div className="h-full bg-gold/40 rounded-full transition-all" style={{width: `${Math.min(stories.length * 10, 100)}%`}} />
+                  </div>
                 </div>
-                <div className="p-8 bg-white rounded-[2rem] border border-black/5 shadow-sm">
-                  <div className="text-[10px] small-caps tracking-widest text-black/40 font-bold mb-4">Current Streak</div>
-                  <div className="text-4xl font-serif font-bold">{userProfile?.streak || 0} Days</div>
+                <div className="p-8 bg-white rounded-[2rem] border border-black/5 shadow-sm hover:shadow-md transition-all group">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="text-[10px] small-caps tracking-widest text-black/40 font-bold">Current Streak</div>
+                    <div className="w-8 h-8 rounded-xl bg-black/5 flex items-center justify-center text-black/30 group-hover:bg-orange-50 group-hover:text-orange-500 transition-all">
+                      <Star size={16} />
+                    </div>
+                  </div>
+                  <div className="text-4xl font-serif font-bold text-orange-500">{userProfile?.streak || 0} <span className="text-2xl text-black font-light">Days</span></div>
+                  <div className="mt-3 h-1 bg-black/5 rounded-full overflow-hidden">
+                    <div className="h-full bg-orange-300/50 rounded-full transition-all" style={{width: `${Math.min((userProfile?.streak || 0) * 5, 100)}%`}} />
+                  </div>
                 </div>
-                <div className="p-8 bg-white rounded-[2rem] border border-black/5 shadow-sm">
-                  <div className="text-[10px] small-caps tracking-widest text-black/40 font-bold mb-4">Tokens</div>
+                <div className="p-8 bg-white rounded-[2rem] border border-black/5 shadow-sm hover:shadow-md transition-all group">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="text-[10px] small-caps tracking-widest text-black/40 font-bold">Tokens</div>
+                    <div className="w-8 h-8 rounded-xl bg-black/5 flex items-center justify-center text-black/30 group-hover:bg-gold/10 group-hover:text-gold transition-all">
+                      <Zap size={16} />
+                    </div>
+                  </div>
                   <div className="text-4xl font-serif font-bold text-gold">{userProfile?.tokens || 0}</div>
+                  <div className="mt-3 h-1 bg-black/5 rounded-full overflow-hidden">
+                    <div className="h-full bg-gold/40 rounded-full transition-all" style={{width: `${Math.min((userProfile?.tokens || 0) * 2, 100)}%`}} />
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -1408,7 +1399,7 @@ export default function Dashboard({ userProfile }: DashboardProps) {
                   value={partnerEmail}
                   onChange={(e) => setPartnerEmail(e.target.value)}
                   placeholder="partner@example.com"
-                  className="w-full bg-black/5 rounded-2xl p-4 outline-none border border-black/5 font-medium"
+                  className="w-full bg-black/5 rounded-2xl p-4 outline-none border border-black/5 focus:border-gold/40 focus:bg-gold/5 transition-all font-medium placeholder:text-black/25"
                 />
               </div>
 

@@ -169,12 +169,13 @@
 }
 
 .card-hover-lift {
-  transition: transform 0.3s var(--easing-standard), box-shadow 0.3s var(--easing-standard);
+  transition: transform 0.3s var(--easing-standard), box-shadow 0.3s var(--easing-standard), border-color 0.3s ease;
 }
 
 .card-hover-lift:hover {
   transform: translateY(-8px);
   box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3);
+  border-color: rgba(212, 175, 55, 0.15);
 }
 
 .shimmer {
@@ -446,4 +447,28 @@
   letter-spacing: 0.1em !important;
   word-spacing: 0.2em !important;
   line-height: 1.6 !important;
+}
+
+/* Design Enhancement Utilities */
+.text-gradient-gold {
+  background: linear-gradient(135deg, var(--color-gold), #b8860b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.btn-gradient-gold {
+  background: linear-gradient(135deg, var(--color-gold) 0%, #b8860b 100%);
+  color: var(--color-night);
+  box-shadow: 0 8px 24px -4px rgba(212,175,55,0.3);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+.btn-gradient-gold:hover {
+  box-shadow: 0 12px 32px -4px rgba(212,175,55,0.5);
+  transform: translateY(-1px);
+}
+
+.bg-gradient-radial {
+  background-image: radial-gradient(circle, var(--tw-gradient-stops));
 }

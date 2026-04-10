@@ -22,13 +22,18 @@ export default function Landing() {
           <Link to="/marketplace" className="text-xs font-bold uppercase tracking-[0.3em] text-white/40 hover:text-gold transition-colors">Marketplace</Link>
           <div className="flex items-center gap-4">
             <Link to="/login" className="px-8 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-[0.3em] hover:bg-white/10 transition-all">Sign In</Link>
-            <Link to="/login" className="px-8 py-3 bg-gold text-night rounded-xl text-xs font-bold uppercase tracking-[0.3em] hover:scale-105 transition-all shadow-xl shadow-gold/20">Get Started</Link>
+            <Link to="/login" className="px-8 py-3 btn-gradient-gold rounded-xl text-xs font-bold uppercase tracking-[0.3em] hover:scale-105 transition-all shadow-xl shadow-gold/20">Get Started</Link>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-48 px-6 overflow-hidden">
+        {/* Radial glow layers */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-0 left-0 w-[900px] h-[900px] -translate-x-1/4 -translate-y-1/4 rounded-full" style={{background: 'radial-gradient(circle, rgba(212,175,55,0.07) 0%, transparent 70%)'}} />
+          <div className="absolute bottom-0 right-0 w-[600px] h-[600px] translate-x-1/4 translate-y-1/4 rounded-full" style={{background: 'radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%)'}} />
+        </div>
         <div className="container mx-auto max-w-7xl relative z-10">
           <div className="max-w-5xl">
             <motion.div 
@@ -48,7 +53,7 @@ export default function Landing() {
               className="text-[12vw] md:text-[9vw] font-serif font-light leading-[0.85] mb-12 tracking-tighter"
             >
               Craft Your <br />
-              <span className="italic text-gold">Masterpiece</span> <br />
+              <span className="italic text-gradient-gold">Masterpiece</span> <br />
               Page by <span className="font-bold">Page.</span>
             </motion.h1>
 
@@ -137,10 +142,12 @@ export default function Landing() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.2 }}
-                className="p-12 bg-black/40 rounded-[3rem] border border-white/5 hover:border-gold/20 transition-all group relative overflow-hidden"
+                className="p-12 bg-black/40 rounded-[3rem] border border-white/5 hover:border-gold/20 transition-all group relative overflow-hidden card-hover-lift"
               >
-                <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
-                  <span className="text-8xl font-serif font-bold">0{i+1}</span>
+                {/* Top glow line on hover */}
+                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-transparent to-transparent group-hover:via-gold/40 transition-all duration-500 rounded-t-[3rem]" />
+                <div className="absolute top-0 right-0 p-8 opacity-[0.07] group-hover:opacity-[0.12] transition-opacity select-none">
+                  <span className="text-[7rem] font-serif font-bold leading-none">0{i+1}</span>
                 </div>
                 <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-gold group-hover:text-night transition-all">
                   {feature.icon}
@@ -174,7 +181,10 @@ export default function Landing() {
 
       {/* CTA Section */}
       <section className="py-48 px-6 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gold opacity-5" />
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute inset-0" style={{background: 'radial-gradient(ellipse at center, rgba(212,175,55,0.08) 0%, transparent 70%)'}} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full" style={{background: 'rgba(212,175,55,0.04)', filter: 'blur(100px)'}} />
+        </div>
         <div className="container mx-auto max-w-5xl text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -182,9 +192,9 @@ export default function Landing() {
             viewport={{ once: true }}
             className="space-y-12"
           >
-            <h2 className="text-8xl font-serif font-light mb-12 leading-tight tracking-tighter">Ready to <span className="italic text-gold">Craft Your Tale?</span></h2>
+            <h2 className="text-8xl font-serif font-light mb-12 leading-tight tracking-tighter text-glow">Ready to <span className="italic text-gradient-gold">Craft Your Tale?</span></h2>
             <p className="text-2xl text-white/40 mb-16 font-light italic max-w-2xl mx-auto">"The only limit is your imagination. Every crafted story is a universe waiting to be born."</p>
-            <Link to="/login" className="px-16 py-8 bg-gold text-night rounded-[2rem] font-bold text-2xl hover:scale-105 transition-all shadow-2xl shadow-gold/40 inline-flex items-center gap-4 group">
+            <Link to="/login" className="px-16 py-8 btn-gradient-gold rounded-[2rem] font-bold text-2xl hover:scale-105 transition-all shadow-2xl shadow-gold/40 inline-flex items-center gap-4 group">
               <span>Get Started for Free</span>
               <ChevronRight size={32} className="group-hover:translate-x-2 transition-transform" />
             </Link>

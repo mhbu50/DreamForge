@@ -162,7 +162,7 @@ export default function Settings({ onRedeem }: SettingsProps) {
             <div className="flex items-center justify-between p-4 bg-black/5 rounded-2xl">
               <div>
                 <p className="text-sm font-bold">App Lock</p>
-                <p className="text-xs text-black/40">Require password to open Dreamforge</p>
+                <p className="text-xs text-black/40">Require password to open StoryCraft</p>
               </div>
               <button 
                 onClick={() => handleNestedUpdate('security', { appLockEnabled: !config.security.appLockEnabled })}
