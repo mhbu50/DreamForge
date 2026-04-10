@@ -1,0 +1,233 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Document ID: uid
+    // Fields:
+    //   - uid: string (required)
+    //   - email: string (required, format: email)
+    //   - displayName: string (optional)
+    //   - role: string (required, enum: ['headadmin', 'admin', 'user'])
+    //   - subscriptionTier: string (required, enum: ['standard', 'premium'])
+    //   - subscriptionStatus: string (required, enum: ['active', 'expired', 'canceled'])
+    //   - subscriptionCycle: string (required, enum: ['monthly', 'yearly', 'none'])
+    //   - subscriptionExpiresAt: number (optional)
+    //   - streak: number (optional)
+    //   - badges: list (optional)
+    //   - lastActive: number (optional)
+    //   - createdAt: number (required)
+    //
+    // Collection: stories
+    // Document ID: storyId
+    // Fields:
+    //   - userId: string (required)
+    //   - title: string (required)
+    //   - pages: list (required)
+    //   - style: string (required)
+    //   - language: string (optional)
+    //   - seriesId: string (optional)
+    //   - isPublished: bool (optional)
+    //   - price: number (optional)
+    //   - likes: number (optional)
+    //   - collaborators: list (optional)
+    //   - createdAt: number (required)
+    //
+    // Collection: feedback
+    // Document ID: feedbackId
+    // Fields:
+    //   - userId: string (required)
+    //   - userEmail: string (required)
+    //   - type: string (required, enum: ['bug', 'suggestion'])
+    //   - content: string (required)
+    //   - status: string (required, enum: ['pending', 'reviewed', 'resolved'])
+    //   - createdAt: number (required)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isHeadAdmin() {
+      return isAuthenticated() && 
+        ((request.auth.token.email == "alaa.abukhamseen@gmail.com" && request.auth.token.email_verified == true) ||
+         (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'headadmin'));
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (isHeadAdmin() || (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'));
+    }
+
+    function isCollaborator(storyData) {
+      return isAuthenticated() && ('collaborators' in storyData) && (request.auth.uid in storyData.collaborators);
+    }
+
+    function isValidUser(data) {
+      return (!('uid' in data) || data.uid is string) &&
+             (!('email' in data) || data.email is string) &&
+             (!('role' in data) || data.role in ['headadmin', 'admin', 'user']) &&
+             (!('subscriptionTier' in data) || data.subscriptionTier in ['free', 'standard', 'premium', 'ultimate']) &&
+             (!('subscriptionStatus' in data) || data.subscriptionStatus in ['active', 'expired', 'canceled']) &&
+             (!('subscriptionCycle' in data) || data.subscriptionCycle in ['monthly', 'yearly', 'none']) &&
+             (!('subscriptionExpiresAt' in data) || data.subscriptionExpiresAt is number || data.subscriptionExpiresAt == null) &&
+             (!('createdAt' in data) || data.createdAt is number) &&
+             (!('displayName' in data) || data.displayName is string) &&
+             (!('customSettings' in data) || data.customSettings is map) &&
+             (!('workspaceLayout' in data) || data.workspaceLayout is map) &&
+             (!('activeThemeId' in data) || data.activeThemeId is string || data.activeThemeId == null) &&
+             (!('badges' in data) || data.badges is list) &&
+             (!('streak' in data) || data.streak is number) &&
+             (!('lastActive' in data) || data.lastActive is number) &&
+             (!('updatedAt' in data) || data.updatedAt is number);
+    }
+
+    function isValidBook(data) {
+      return data.userId is string &&
+             data.title is string &&
+             data.type in ['story', 'comic', 'anime', 'novel', 'manga', 'biography', 'other'] &&
+             data.createdAt is number &&
+             (!('description' in data) || data.description is string) &&
+             (!('coverImage' in data) || data.coverImage is string) &&
+             (!('status' in data) || data.status in ['draft', 'completed', 'published']) &&
+             (!('metadata' in data) || data.metadata is map) &&
+             (!('updatedAt' in data) || data.updatedAt is number);
+    }
+
+    function isValidChapter(data) {
+      return data.bookId is string &&
+             data.title is string &&
+             data.order is number &&
+             (!('content' in data) || data.content is string) &&
+             (!('wordCount' in data) || data.wordCount is number) &&
+             (!('isLocked' in data) || data.isLocked is bool) &&
+             (!('createdAt' in data) || data.createdAt is number) &&
+             (!('updatedAt' in data) || data.updatedAt is number);
+    }
+
+    function isValidTheme(data) {
+      return data.userId is string &&
+             data.name is string &&
+             (!('authorName' in data) || data.authorName is string) &&
+             (!('description' in data) || data.description is string) &&
+             (!('isPublic' in data) || data.isPublic is bool) &&
+             (!('css' in data) || data.css is string) &&
+             (!('likes' in data) || data.likes is number) &&
+             (!('downloads' in data) || data.downloads is number) &&
+             (!('previewImage' in data) || data.previewImage is string) &&
+             (!('config' in data) || data.config is map) &&
+             (!('createdAt' in data) || data.createdAt is number);
+    }
+
+    function isValidStory(data) {
+      return data.userId is string &&
+             data.title is string &&
+             data.pages is list &&
+             data.style is string &&
+             data.createdAt is number &&
+             (!('authorName' in data) || data.authorName is string) &&
+             (!('language' in data) || data.language is string) &&
+             (!('ageGroup' in data) || data.ageGroup is string) &&
+             (!('seriesId' in data) || data.seriesId is string) &&
+             (!('isPublished' in data) || data.isPublished is bool) &&
+             (!('price' in data) || data.price is number) &&
+             (!('likes' in data) || data.likes is number) &&
+             (!('collaborators' in data) || data.collaborators is list);
+    }
+
+    function isValidFeedback(data) {
+      return data.userId is string &&
+             data.userEmail is string &&
+             data.type in ['bug', 'suggestion'] &&
+             data.content is string &&
+             data.status in ['pending', 'reviewed', 'resolved'] &&
+             data.createdAt is number;
+    }
+
+    function isValidGlobalSettings(data) {
+      return (!('maintenanceMode' in data) || data.maintenanceMode is bool) &&
+             (!('termsOfConditions' in data) || data.termsOfConditions is string) &&
+             (!('privacyPolicy' in data) || data.privacyPolicy is string) &&
+             (!('uiSettings' in data) || data.uiSettings is map);
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if isHeadAdmin() && (settingId != 'global' || isValidGlobalSettings(request.resource.data));
+    }
+
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+      allow create: if isAuthenticated() && request.auth.uid == userId && isValidUser(request.resource.data);
+      allow update: if isAuthenticated() && (
+        (isOwner(userId) && isValidUser(request.resource.data) && 
+         (!('role' in request.resource.data) || request.resource.data.role == resource.data.role || isHeadAdmin())) || 
+        isHeadAdmin()
+      );
+      allow delete: if isHeadAdmin();
+    }
+
+    match /books/{bookId} {
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin() || resource.data.status == 'published');
+      allow create: if isAuthenticated() && isValidBook(request.resource.data) && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin()) && isValidBook(request.resource.data);
+      allow delete: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+
+      match /chapters/{chapterId} {
+        allow read: if isAuthenticated() && (get(/databases/$(database)/documents/books/$(bookId)).data.userId == request.auth.uid || isAdmin() || get(/databases/$(database)/documents/books/$(bookId)).data.status == 'published');
+        allow create: if isAuthenticated() && isValidChapter(request.resource.data) && get(/databases/$(database)/documents/books/$(bookId)).data.userId == request.auth.uid;
+        allow update: if isAuthenticated() && (get(/databases/$(database)/documents/books/$(bookId)).data.userId == request.auth.uid || isAdmin()) && isValidChapter(request.resource.data);
+        allow delete: if isAuthenticated() && (get(/databases/$(database)/documents/books/$(bookId)).data.userId == request.auth.uid || isAdmin());
+      }
+    }
+
+    match /themes/{themeId} {
+      allow read: if resource.data.isPublic == true || (isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin()));
+      allow create: if isAuthenticated() && isValidTheme(request.resource.data) && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin()) && isValidTheme(request.resource.data);
+      allow delete: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+    }
+
+    match /stories/{storyId} {
+      allow read: if (isAuthenticated() && (resource.data.userId == request.auth.uid || isCollaborator(resource.data) || isAdmin())) || (resource.data.isPublished == true);
+      allow create: if isAuthenticated() && isValidStory(request.resource.data) && (request.resource.data.userId == request.auth.uid || isAdmin());
+      allow update: if isAuthenticated() && (
+        (resource.data.userId == request.auth.uid && isValidStory(request.resource.data)) || 
+        (isCollaborator(resource.data) && isValidStory(request.resource.data)) ||
+        isAdmin() ||
+        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes']))
+      );
+      allow delete: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+    }
+
+    match /feedback/{feedbackId} {
+      allow create: if isAuthenticated() && isValidFeedback(request.resource.data) && request.resource.data.userId == request.auth.uid;
+      allow read: if isAdmin();
+      allow update, delete: if isAdmin();
+    }
+
+    match /subscription_codes/{codeId} {
+      allow get: if isAuthenticated();
+      allow list: if isHeadAdmin();
+      allow create: if isHeadAdmin();
+      allow update: if isAuthenticated() && (isHeadAdmin() || (resource.data.isUsed == false && request.resource.data.isUsed == true && request.resource.data.usedBy == request.auth.uid));
+      allow delete: if isHeadAdmin();
+    }
+  }
+}

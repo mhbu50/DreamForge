@@ -1,0 +1,449 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:wght@100..900&family=Anton&family=JetBrains+Mono&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Dancing+Script:wght@400..700&display=swap');
+
+@theme {
+  --font-serif: "Cormorant Garamond", serif;
+  --font-sans: "Inter", sans-serif;
+  --font-display: "Anton", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-playfair: "Playfair Display", serif;
+  
+  --color-paper: #f5f5f0;
+  --color-ink: #1a1a1a;
+  --color-olive: #5a5a40;
+  --color-gold: #d4af37;
+  --color-night: #0a0a0a;
+  --color-silk: #fafaf9;
+  --color-amber: #ffbf00;
+  --color-crimson: #990000;
+
+  --easing-standard: cubic-bezier(0.2, 0.9, 0.4, 1.1);
+  --easing-dramatic: cubic-bezier(0.85, 0, 0.15, 1);
+}
+
+@layer base {
+  body {
+    @apply bg-paper text-ink font-sans antialiased selection:bg-gold/30;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+}
+
+/* Recipe 4: Dark Luxury / Travel */
+.luxury-bg {
+  background-color: var(--color-night);
+  color: white;
+}
+
+.title-text {
+  font-size: clamp(3rem, 10vw, 8rem);
+  line-height: 0.85;
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  @apply font-serif;
+}
+
+.small-caps {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Recipe 7: Atmospheric / Immersive Media */
+.atmosphere {
+  background: 
+    radial-gradient(circle at 50% 30%, #3a1510 0%, transparent 60%),
+    radial-gradient(circle at 10% 80%, #5a5a40 0%, transparent 50%),
+    radial-gradient(circle at 90% 10%, #d4af37 0%, transparent 40%);
+  filter: blur(100px);
+  opacity: 0.4;
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  animation: atmosphere-drift 20s ease-in-out infinite alternate;
+}
+
+@keyframes atmosphere-drift {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.1) translate(2%, 2%); }
+}
+
+.glass-surface {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-surface-gold {
+  background: rgba(212, 175, 55, 0.05);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(212, 175, 55, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(212, 175, 55, 0.1);
+}
+
+/* Overlays */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
+  animation: grain 8s steps(10) infinite;
+}
+
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, -5%); }
+  20% { transform: translate(-10%, 5%); }
+  30% { transform: translate(5%, -10%); }
+  40% { transform: translate(-5%, 15%); }
+  50% { transform: translate(-10%, 5%); }
+  60% { transform: translate(15%, 0); }
+  70% { transform: translate(0, 10%); }
+  80% { transform: translate(-15%, 0); }
+  90% { transform: translate(10%, 5%); }
+}
+
+.vignette-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.4) 100%);
+}
+
+/* Micro-interactions */
+.input-focus-underline {
+  position: relative;
+}
+
+.input-focus-underline::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--color-gold);
+  transition: width 0.3s var(--easing-standard), left 0.3s var(--easing-standard);
+}
+
+.input-focus-underline:focus-within::after {
+  width: 100%;
+  left: 0;
+}
+
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-ripple::after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
+  background-repeat: no-repeat;
+  background-position: 50%;
+  transform: scale(10, 10);
+  opacity: 0;
+  transition: transform 0.5s, opacity 1s;
+}
+
+.btn-ripple:active::after {
+  transform: scale(0, 0);
+  opacity: 0.3;
+  transition: 0s;
+}
+
+.card-hover-lift {
+  transition: transform 0.3s var(--easing-standard), box-shadow 0.3s var(--easing-standard);
+}
+
+.card-hover-lift:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3);
+}
+
+.shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.2);
+  border-radius: 10px;
+  transition: background 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.4);
+}
+
+/* Custom Utilities */
+.book-shadow {
+  box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.3), 0 18px 36px -18px rgba(0, 0, 0, 0.35);
+}
+
+.page-gradient {
+  background: linear-gradient(to right, rgba(0,0,0,0.1) 0%, transparent 10%, transparent 90%, rgba(0,0,0,0.1) 100%);
+}
+
+.text-glow {
+  text-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+}
+
+.mask-fade-y {
+  mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-15px) rotate(1deg); }
+}
+
+.animate-float {
+  animation: float 8s ease-in-out infinite;
+}
+
+@keyframes pulse-gold {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+  50% { box-shadow: 0 0 40px 10px rgba(212, 175, 55, 0.2); }
+}
+
+.animate-pulse-gold {
+  animation: pulse-gold 3s ease-in-out infinite;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.custom-scrollbar-dark::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.rotate-y-10 {
+  transform: rotateY(10deg);
+}
+
+/* 25 Visual Design Styles for StoryCraft */
+
+.style-watercolor-dream {
+  background: #fdfcf0;
+  color: #4a4a4a;
+  font-family: var(--font-serif);
+  background-image: radial-gradient(circle at 20% 20%, rgba(168, 218, 220, 0.2) 0%, transparent 40%),
+                    radial-gradient(circle at 80% 80%, rgba(241, 192, 232, 0.2) 0%, transparent 40%);
+}
+
+.style-midnight-tales {
+  background: #0a0e1a;
+  color: #e0e0e0;
+  font-family: var(--font-playfair);
+  background-image: radial-gradient(circle at 50% 50%, rgba(75, 0, 130, 0.2) 0%, transparent 70%);
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+.style-vintage-storybook {
+  background: #e6d5b8;
+  color: #3e2723;
+  font-family: "Georgia", serif;
+  border: 20px solid transparent;
+  border-image: url("https://www.transparenttextures.com/patterns/aged-paper.png") 30 round;
+}
+
+.style-whimsical-play {
+  background: #ffefba;
+  color: #ff6b6b;
+  font-family: "Comic Sans MS", cursive;
+  border-radius: 40px;
+}
+
+.style-minimalist-parchment {
+  background: #fcfaf2;
+  color: #2c3e50;
+  font-family: var(--font-serif);
+  padding: 4rem;
+}
+
+.style-enchanted-forest {
+  background: #1b3022;
+  color: #ecf39e;
+  font-family: var(--font-serif);
+  background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("https://www.transparenttextures.com/patterns/leaf.png");
+}
+
+.style-galactic-odyssey {
+  background: #0b0d17;
+  color: #00f2ff;
+  font-family: var(--font-mono);
+  box-shadow: inset 0 0 100px rgba(0, 242, 255, 0.1);
+}
+
+.style-fairy-dust {
+  background: #fff0f5;
+  color: #db7093;
+  font-family: var(--font-serif);
+  background-image: radial-gradient(circle, #ffffff 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.style-steampunk-chronicle {
+  background: #4e342e;
+  color: #d4af37;
+  font-family: "Courier New", monospace;
+  border: 10px double #d4af37;
+}
+
+.style-nordic-simplicity {
+  background: #f0f4f8;
+  color: #334e68;
+  font-family: var(--font-sans);
+}
+
+.style-neon-noir {
+  background: #000000;
+  color: #ff00ff;
+  font-family: var(--font-display);
+  text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff;
+}
+
+.style-paper-cut {
+  background: #ffffff;
+  color: #333;
+  font-family: var(--font-sans);
+  box-shadow: 10px 10px 0px #eee;
+}
+
+.style-botanical-sketch {
+  background: #f9fbf2;
+  color: #4b5320;
+  font-family: var(--font-serif);
+}
+
+.style-retro-pixel {
+  background: #000;
+  color: #0f0;
+  font-family: var(--font-mono);
+  image-rendering: pixelated;
+}
+
+.style-gilded-age {
+  background: #2c001e;
+  color: #d4af37;
+  font-family: var(--font-playfair);
+  border: 5px solid #d4af37;
+}
+
+.style-misty-highlands {
+  background: #cfd8dc;
+  color: #455a64;
+  font-family: var(--font-serif);
+  opacity: 0.9;
+}
+
+.style-kawaii-cute {
+  background: #ffdeeb;
+  color: #ff85a1;
+  font-family: "Rounded Mplus 1c", sans-serif;
+}
+
+.style-art-nouveau {
+  background: #fdf5e6;
+  color: #556b2f;
+  font-family: var(--font-serif);
+}
+
+.style-scandinavian-folk {
+  background: #ffffff;
+  color: #c62828;
+  font-family: var(--font-sans);
+}
+
+.style-monochrome-ink {
+  background: #ffffff;
+  color: #000000;
+  font-family: var(--font-serif);
+  border: 2px solid #000;
+}
+
+.style-cloud-nine {
+  background: #e3f2fd;
+  color: #1976d2;
+  font-family: var(--font-sans);
+  border-radius: 100px;
+}
+
+.style-crystal-cavern {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.style-rustic-cabin {
+  background: #5d4037;
+  color: #d7ccc8;
+  font-family: var(--font-serif);
+}
+
+.style-celestial-map {
+  background: #1a237e;
+  color: #ffeb3b;
+  font-family: var(--font-serif);
+}
+
+.style-toy-block {
+  background: #f44336;
+  color: #fff;
+  font-family: var(--font-display);
+  box-shadow: 5px 5px 0px #b71c1c;
+}
+
+.font-dyslexic {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Arial', sans-serif !important;
+  letter-spacing: 0.1em !important;
+  word-spacing: 0.2em !important;
+  line-height: 1.6 !important;
+}

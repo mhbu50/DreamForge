@@ -1,0 +1,7 @@
+{
+  "name": "StoryCraft",
+  "description": "An immersive manual story studio that allows users to craft illustrated books with cinematic precision.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}

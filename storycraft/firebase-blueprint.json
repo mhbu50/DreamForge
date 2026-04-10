@@ -1,0 +1,150 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User profile information, roles, and customization settings.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "The unique ID of the user." },
+        "email": { "type": "string", "format": "email", "description": "The user's email address." },
+        "displayName": { "type": "string", "description": "The user's display name." },
+        "role": { "type": "string", "enum": ["headadmin", "admin", "user"], "description": "The user's role." },
+        "subscriptionTier": { "type": "string", "enum": ["free", "standard", "premium", "ultimate"], "description": "The user's subscription tier." },
+        "customSettings": { "type": "object", "description": "User-specific UI and behavior settings (Interface, Visual Style, AI Brain, etc.)" },
+        "workspaceLayout": { "type": "object", "description": "Saved workspace layouts and presets." },
+        "activeThemeId": { "type": "string", "description": "ID of the currently active custom theme." },
+        "xp": { "type": "number", "description": "The user's total experience points." },
+        "level": { "type": "number", "description": "The user's current level." },
+        "createdAt": { "type": "number", "description": "Timestamp of account creation." }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Book": {
+      "title": "Book",
+      "description": "A creative project (Story, Comic, Anime).",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique book ID." },
+        "userId": { "type": "string", "description": "The ID of the user who created the book." },
+        "title": { "type": "string", "description": "The title of the book." },
+        "type": { "type": "string", "enum": ["story", "comic", "anime"], "description": "The type of book." },
+        "description": { "type": "string", "description": "A brief description of the book." },
+        "coverImage": { "type": "string", "description": "URL of the book cover image." },
+        "status": { "type": "string", "enum": ["draft", "completed", "published"], "description": "Current status of the book." },
+        "metadata": { "type": "object", "description": "Additional book-specific metadata (genre, tags, etc.)" },
+        "createdAt": { "type": "number", "description": "Timestamp of book creation." },
+        "updatedAt": { "type": "number", "description": "Timestamp of last update." }
+      },
+      "required": ["userId", "title", "type"]
+    },
+    "Chapter": {
+      "title": "Chapter",
+      "description": "A chapter or scene within a book.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique chapter ID." },
+        "bookId": { "type": "string", "description": "The ID of the book this chapter belongs to." },
+        "title": { "type": "string", "description": "The title of the chapter." },
+        "content": { "type": "string", "description": "The text content of the chapter." },
+        "order": { "type": "number", "description": "The order of the chapter in the book." },
+        "wordCount": { "type": "number", "description": "The word count of the chapter." },
+        "isLocked": { "type": "boolean", "description": "Whether the chapter is locked for editing." },
+        "createdAt": { "type": "number", "description": "Timestamp of chapter creation." },
+        "updatedAt": { "type": "number", "description": "Timestamp of last update." }
+      },
+      "required": ["bookId", "title", "order"]
+    },
+    "Theme": {
+      "title": "Theme",
+      "description": "Custom UI theme settings.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique theme ID." },
+        "userId": { "type": "string", "description": "The ID of the user who created the theme." },
+        "authorName": { "type": "string", "description": "The name of the author." },
+        "name": { "type": "string", "description": "The name of the theme." },
+        "description": { "type": "string", "description": "A brief description of the theme." },
+        "isPublic": { "type": "boolean", "description": "Whether the theme is shared with the marketplace." },
+        "css": { "type": "string", "description": "Custom CSS theme injection." },
+        "likes": { "type": "number", "description": "Number of likes." },
+        "downloads": { "type": "number", "description": "Number of downloads." },
+        "previewImage": { "type": "string", "description": "URL of the preview image." },
+        "config": { "type": "object", "description": "Theme-specific visual settings." },
+        "createdAt": { "type": "number", "description": "Timestamp of theme creation." }
+      },
+      "required": ["userId", "name"]
+    },
+    "Feedback": {
+      "title": "Feedback",
+      "description": "User bug reports and feature suggestions.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique feedback ID." },
+        "userId": { "type": "string", "description": "The ID of the user who submitted the feedback." },
+        "userEmail": { "type": "string", "format": "email", "description": "The email of the user who submitted the feedback." },
+        "type": { "type": "string", "enum": ["bug", "suggestion"], "description": "The type of feedback." },
+        "content": { "type": "string", "description": "The feedback content." },
+        "status": { "type": "string", "enum": ["pending", "reviewed", "resolved"], "description": "The status of the feedback." },
+        "createdAt": { "type": "number", "description": "Timestamp of feedback submission." }
+      },
+      "required": ["userId", "userEmail", "type", "content", "status", "createdAt"]
+    },
+    "SubscriptionCode": {
+      "title": "Subscription Code",
+      "description": "A 12-digit code used to redeem a subscription tier.",
+      "type": "object",
+      "properties": {
+        "code": { "type": "string", "description": "The 12-digit unique code." },
+        "tier": { "type": "string", "enum": ["standard", "premium", "ultimate"], "description": "The tier this code grants." },
+        "isUsed": { "type": "boolean", "description": "Whether the code has been redeemed." },
+        "usedBy": { "type": "string", "description": "The UID of the user who redeemed the code." },
+        "usedAt": { "type": "number", "description": "Timestamp of redemption." },
+        "createdAt": { "type": "number", "description": "Timestamp of code generation." },
+        "createdBy": { "type": "string", "description": "The UID of the admin who created the code." }
+      },
+      "required": ["code", "tier", "isUsed", "createdAt", "createdBy"]
+    },
+    "GlobalConfig": {
+      "title": "Global Configuration",
+      "description": "Global application settings.",
+      "type": "object",
+      "properties": {
+        "termsOfConditions": { "type": "string", "description": "The full text of the terms and conditions." },
+        "privacyPolicy": { "type": "string", "description": "The full text of the privacy policy." },
+        "maintenanceMode": { "type": "boolean" },
+        "updatedAt": { "type": "number", "description": "Last update timestamp." }
+      },
+      "required": ["termsOfConditions", "privacyPolicy", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": {
+      "schema": "User",
+      "description": "User profiles and settings."
+    },
+    "/books/{bookId}": {
+      "schema": "Book",
+      "description": "Creative projects (Books, Comics, Anime)."
+    },
+    "/books/{bookId}/chapters/{chapterId}": {
+      "schema": "Chapter",
+      "description": "Chapters or scenes within a book."
+    },
+    "/themes/{themeId}": {
+      "schema": "Theme",
+      "description": "Custom UI themes."
+    },
+    "/feedback/{feedbackId}": {
+      "schema": "Feedback",
+      "description": "Bug reports and suggestions."
+    },
+    "/subscription_codes/{codeId}": {
+      "schema": "SubscriptionCode",
+      "description": "Redeemable subscription codes."
+    },
+    "/settings/{settingId}": {
+      "schema": "GlobalConfig",
+      "description": "Global application settings."
+    }
+  }
+}
